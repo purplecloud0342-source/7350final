@@ -51,7 +51,19 @@ export const TRANSLATIONS = {
         { name: "复杂推理 (CoT)", tokens: "200–1000+", driver: "思维链长度" },
         { name: "图像生成 (Image Gen)", tokens: "256–4096", driver: "视觉 Token / 分辨率" }
       ],
-      logic_final: "最终链路：更长的回复 → 更多 Token → 更高能耗 ↑，更高耗水 ↑，更高碳排放 ↑",
+      external_tools_title: "计算器工具",
+      external_tools_desc: "如需针对特定模型（如 GPT-4、DeepSeek）进行精确计算。",
+      external_tools_btn: "Token 计算器",
+      logic_title: "Token：AI 资源可问责性的基本单位",
+      logic_core: "核心逻辑：Token 越多 → 能耗越高（强线性关系）",
+      logic_evidence_title: "证据：",
+      logic_evidence_items: [
+        { title: "Poddar 等人", "desc": "输入和输出长度均与能耗线性相关，且输出的斜率明显更陡。" },
+        { title: "多项基准测试", "desc": "输出 Token 与能耗的相关性 r≈0.95，远超输入。" },
+        { title: "Dauner 等人（14 个模型，7–720 亿参数）", "desc": "CO₂ 排放量随生成 Token 增加而增加，与模型规模和“思考长度”强相关。" }
+      ],
+      logic_metric: "核心指标：每 Token 能耗（焦耳/Token）",
+      logic_final: "最终链路：更长的回复 → 更多 Token → 更高能耗 ↑，更高耗水 ↑，更高碳排放 ↑"
     },
     section_2: {
       title: "第二站 — 谁在为 AI 买单",

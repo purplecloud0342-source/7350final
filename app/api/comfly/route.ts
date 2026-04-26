@@ -8,15 +8,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing messages array in request body.' }, { status: 400 });
   }
 
-  const rawApiKey = process.env.COMFLY_API_KEY;
-  const apiKey = rawApiKey?.trim().replace(/^['\"]|['\"]$/g, '');
+  const apiKey = process.env.COMFLY_API_KEY?.trim();
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'Comfly API key is missing on the server. Set COMFLY_API_KEY in .env.local.' },
+      {
+        error:
+          'Comfly API key is missing on the server. Set COMFLY_API_KEY in Vercel environment variables or .env.local.',
+      },
       { status: 500 },
     );
   }
+
+  const requestBody = {
+    ...body,
+    model: 'gpt-4-turbo', // 指定模型
+  };
 
   const response = await fetch('https://ai.comfly.chat/v1/chat/completions', {
     method: 'POST',
@@ -24,7 +31,7 @@ export async function POST(request: NextRequest) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(requestBody), // 用新的 requestBody
   });
 
   const data = await response.json().catch(() => ({}));

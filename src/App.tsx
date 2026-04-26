@@ -1510,10 +1510,11 @@ export default function App() {
               {/* Added Wage Image */}
               <div className="mt-20 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10 bg-white p-4">
                 <img 
-                  src="/images/wage.png" 
+                  src="/images/wage.png?t=1" 
                   alt="Global Wage Comparison" 
                   className="w-full h-auto rounded-[40px]"
-                  onError={(e) => console.error('Wage image failed to load:', e)}
+                  loading="eager"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -1774,10 +1775,11 @@ export default function App() {
                   </div>
                   <div className="relative group p-4 bg-white/5 rounded-[60px] border border-white/10 backdrop-blur-xl">
                     <img 
-                      src="/images/bias-cycle.png" 
+                      src="/images/bias-cycle.png?t=1" 
                       alt="Bias Cycle" 
                       className="w-full h-auto rounded-[50px] shadow-2xl transition-transform duration-1000 group-hover:scale-[1.02]"
-                      onError={(e) => console.error('Bias cycle image failed to load:', e)}
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 </div>
@@ -1832,10 +1834,11 @@ export default function App() {
                 {/* Data Colonialism Image */}
                 <div className="mt-12 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10">
                   <img 
-                    src="/images/ai-data-colonialism.png" 
+                    src="/images/ai-data-colonialism.png?t=1" 
                     alt="AI Data Colonialism" 
                     className="w-full h-auto"
-                    onError={(e) => console.error('AI data colonialism image failed to load:', e)}
+                    loading="eager"
+                    decoding="async"
                   />
                 </div>
               </div>

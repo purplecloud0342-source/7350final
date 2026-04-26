@@ -22,8 +22,19 @@ const Globe: React.FC<GlobeProps> = ({ onRegionSelect, selectedRegion }) => {
 
   useEffect(() => {
     fetch('https://unpkg.com/world-atlas@2.0.2/countries-110m.json')
-      .then(response => response.json())
-      .then(data => setWorld(feature(data, data.objects.countries)));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('World data loaded successfully');
+        setWorld(feature(data, data.objects.countries));
+      })
+      .catch(error => {
+        console.error('Failed to load world data:', error);
+      });
   }, []);
 
   useEffect(() => {

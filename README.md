@@ -10,11 +10,14 @@ View your app in AI Studio: https://ai.studio/apps/6a45416d-90ed-418e-902c-321ee
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Copy `.env.example` to `.env.local` and set your environment variables:
+   `cp .env.example .env.local`
+3. Add your `GEMINI_API_KEY` and, if needed, `COMFLY_API_KEY` in `.env.local`
+4. Run the app:
    `npm run dev`
+
+> The app uses a secure Next.js API route at `/api/gemini` so the `GEMINI_API_KEY` stays on the server and is never exposed to the browser.

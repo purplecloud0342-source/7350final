@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -155,7 +157,7 @@ export default function App() {
 
   // State for API Query Module
   const [apiText, setApiText] = useState("");
-  const [selectedModel, setSelectedModel] = useState<'gemini' | 'deepseek'>('gemini');
+  const [selectedModel, setSelectedModel] = useState<'gemini' | 'deepseek' | 'comfly'>('gemini');
   const [apiTokenResult, setApiTokenResult] = useState<any>(null);
   const [aiResponse, setAiResponse] = useState("");
   const [isApiLoading, setIsApiLoading] = useState(false);
@@ -386,6 +388,41 @@ export default function App() {
             candidates: candidatesTokens
           });
         }
+      } else if (selectedModel === 'comfly') {
+        const response = await fetch("/api/comfly", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [{ role: "user", content: apiText }],
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = (typeof errorData.error === 'object' && errorData.error !== null)
+            ? (errorData.error.message || JSON.stringify(errorData.error))
+            : (errorData.error || errorData.message || `Server error: ${response.status}`);
+          throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        const generatedText = data.choices?.[0]?.message?.content || data.choices?.[0]?.text || "";
+        setAiResponse(generatedText);
+
+        const usage = data.usage;
+        if (usage) {
+          const res = {
+            total: usage.total_tokens,
+            prompt: usage.prompt_tokens,
+            candidates: usage.completion_tokens
+          };
+          setApiTokenResult(res);
+        } else {
+          const tokens = Math.ceil(apiText.length / 3 + generatedText.length / 3);
+          setApiTokenResult({ total: tokens, prompt: tokens, candidates: 0 });
+        }
       } else {
         // Real DeepSeek-R1 API Call through Server Proxy
         const response = await fetch("/api/deepseek", {
@@ -540,6 +577,16 @@ export default function App() {
           <p className="editorial-text max-w-3xl mb-0 !text-forest/60">
             {t('hero.desc')}
           </p>
+
+          {/* Test Image */}
+          <div className="mt-12 p-4 bg-white rounded-lg shadow-lg">
+            <h3 className="text-lg font-bold mb-4">Test Image - Wage Comparison</h3>
+            <img 
+              src="/images/wage.png" 
+              alt="Test Wage Image" 
+              style={{ display: 'block', maxWidth: '100%', height: 'auto', border: '2px solid red' }}
+            />
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-[1fr_420px] gap-10 items-start">
@@ -571,6 +618,12 @@ export default function App() {
                     >
                       DeepSeek-R1
                     </button>
+                    <button 
+                      onClick={() => setSelectedModel('comfly')}
+                      className={`px-3 py-1 text-[10px] font-bold rounded-full border transition-all ${selectedModel === 'comfly' ? 'bg-forest text-white border-forest' : 'text-forest/40 border-forest/10 hover:text-forest'}`}
+                    >
+                      Comfly Relay
+                    </button>
                   </div>
                 </div>
                 <p className="text-xs italic opacity-40 font-serif">
@@ -583,7 +636,7 @@ export default function App() {
                 disabled={isApiLoading}
                 className="px-10 py-5 bg-forest/20 hover:bg-forest/30 text-forest rounded-full font-bold text-sm transition-all flex items-center gap-3 backdrop-blur group active:scale-95 disabled:opacity-50"
               >
-                {selectedModel === 'gemini' ? t('hero.btn_send_gemini') : t('hero.btn_send_deepseek')}
+                {selectedModel === 'gemini' ? t('hero.btn_send_gemini') : selectedModel === 'comfly' ? '发送至 Comfly 中转站' : t('hero.btn_send_deepseek')}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -1466,16 +1519,15 @@ export default function App() {
 
               {/* Added Wage Image */}
               <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                initial={{ opacity: 1, y: 0 }}
                 className="mt-20 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10 bg-white p-4"
               >
                 <img 
-                  src="/src/images/wage.png" 
+                  src="/images/wage.png" 
                   alt="Global Wage Comparison" 
                   className="w-full h-auto rounded-[40px]"
                   referrerPolicy="no-referrer"
+                  style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
                 />
               </motion.div>
             </div>
@@ -1736,9 +1788,10 @@ export default function App() {
                   </div>
                   <div className="relative group p-4 bg-white/5 rounded-[60px] border border-white/10 backdrop-blur-xl">
                     <img 
-                      src="/src/images/bias cycle.png" 
+                      src="/images/bias-cycle.png" 
                       alt="Bias Cycle" 
                       className="w-full h-auto rounded-[50px] shadow-2xl transition-transform duration-1000 group-hover:scale-[1.02]" 
+                      style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
                     />
                   </div>
                 </div>
@@ -1792,16 +1845,15 @@ export default function App() {
                 
                 {/* Data Colonialism Image */}
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1 }}
+                  initial={{ opacity: 1, scale: 1 }}
                   className="mt-12 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10"
                 >
                   <img 
-                    src="/src/images/ai data colonism.png" 
+                    src="/images/ai-data-colonialism.png" 
                     alt="AI Data Colonialism" 
                     className="w-full h-auto"
                     referrerPolicy="no-referrer"
+                    style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
                   />
                 </motion.div>
               </div>

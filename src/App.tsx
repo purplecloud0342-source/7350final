@@ -577,16 +577,6 @@ export default function App() {
           <p className="editorial-text max-w-3xl mb-0 !text-forest/60">
             {t('hero.desc')}
           </p>
-
-          {/* Test Image */}
-          <div className="mt-12 p-4 bg-white rounded-lg shadow-lg">
-            <h3 className="text-lg font-bold mb-4">Test Image - Wage Comparison</h3>
-            <img 
-              src="/images/wage.png" 
-              alt="Test Wage Image" 
-              style={{ display: 'block', maxWidth: '100%', height: 'auto', border: '2px solid red' }}
-            />
-          </div>
         </div>
 
         <div className="grid lg:grid-cols-[1fr_420px] gap-10 items-start">
@@ -1518,18 +1508,14 @@ export default function App() {
               </div>
 
               {/* Added Wage Image */}
-              <motion.div 
-                initial={{ opacity: 1, y: 0 }}
-                className="mt-20 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10 bg-white p-4"
-              >
+              <div className="mt-20 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10 bg-white p-4">
                 <img 
                   src="/images/wage.png" 
                   alt="Global Wage Comparison" 
                   className="w-full h-auto rounded-[40px]"
-                  referrerPolicy="no-referrer"
-                  style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+                  onError={(e) => console.error('Wage image failed to load:', e)}
                 />
-              </motion.div>
+              </div>
             </div>
 
             {/* 4.2 Content Moderators */}
@@ -1790,8 +1776,8 @@ export default function App() {
                     <img 
                       src="/images/bias-cycle.png" 
                       alt="Bias Cycle" 
-                      className="w-full h-auto rounded-[50px] shadow-2xl transition-transform duration-1000 group-hover:scale-[1.02]" 
-                      style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+                      className="w-full h-auto rounded-[50px] shadow-2xl transition-transform duration-1000 group-hover:scale-[1.02]"
+                      onError={(e) => console.error('Bias cycle image failed to load:', e)}
                     />
                   </div>
                 </div>
@@ -1844,18 +1830,14 @@ export default function App() {
                 </p>
                 
                 {/* Data Colonialism Image */}
-                <motion.div 
-                  initial={{ opacity: 1, scale: 1 }}
-                  className="mt-12 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10"
-                >
+                <div className="mt-12 rounded-[60px] overflow-hidden shadow-2xl border border-forest/10">
                   <img 
                     src="/images/ai-data-colonialism.png" 
                     alt="AI Data Colonialism" 
                     className="w-full h-auto"
-                    referrerPolicy="no-referrer"
-                    style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+                    onError={(e) => console.error('AI data colonialism image failed to load:', e)}
                   />
-                </motion.div>
+                </div>
               </div>
 
               {/* Comparison Table */}
